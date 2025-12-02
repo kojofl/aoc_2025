@@ -1,5 +1,5 @@
 const INPUT: &'static str = include_str!("../input");
-const TEST: &'static str = include_str!("../test");
+const _TEST: &'static str = include_str!("../test");
 
 fn main() {
     let v: Vec<u64> = INPUT
@@ -12,6 +12,9 @@ fn main() {
                     let len = (*i as f64).log10().ceil() as usize;
                     let mid = len / 2;
                     (1..=mid).into_iter().any(|c| {
+                        if len % c != 0 {
+                            return false;
+                        }
                         let mut iter = NumIter::new(*i, c).peekable();
                         while let Some(a) = iter.next() {
                             if let Some(peek) = iter.peek() {
@@ -59,7 +62,7 @@ impl Iterator for NumIter {
         let op = 10_usize.pow((self.len - self.chunk_size) as u32);
         let res = self.inner / op as u64;
         self.inner = self.inner % op as u64;
-        self.len = self.len - self.chunk_size as usize;
+        self.len = self.len - self.chunk_size;
         Some(res)
     }
 }
