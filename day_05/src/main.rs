@@ -1,4 +1,4 @@
-use std::cmp::max;
+use std::cmp::{Ordering, max};
 
 const INPUT: &'static str = include_str!("../input");
 const _TEST: &'static str = include_str!("../test");
@@ -15,18 +15,9 @@ fn main() {
             s..=e
         })
         .collect();
-    let mut fresh = 0;
-    for id in ids.lines() {
-        let id = id.parse().unwrap();
-        if ranges.iter().any(|r| r.contains(&id)) {
-            fresh += 1;
-        }
-    }
-    println!("{fresh}");
     ranges.sort_by(|a, b| b.start().cmp(a.start()));
     let mut combined_ranges = Vec::with_capacity(ranges.len());
     combined_ranges.push(ranges.pop().unwrap());
-
     for range in ranges.into_iter().rev() {
         if let Some(last) = combined_ranges.last_mut()
             && last.end() >= range.start()
@@ -38,8 +29,19 @@ fn main() {
         }
     }
 
+    let mut fresh = 0;
+    for id in ids.lines() {
+        let id = id.parse().unwrap();
+        if combined_ranges.iter().any(|r| r.contains(&id)) {
+            fresh += 1;
+        }
+    }
+    println!("{fresh}");
+
     println!(
         "{}",
-        combined_ranges.into_iter().fold(0, |acc, r| acc + r.count())
+        combined_ranges
+            .into_iter()
+            .fold(0, |acc, r| acc + r.count())
     )
 }
