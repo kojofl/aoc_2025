@@ -65,20 +65,20 @@ impl Position {
     pub fn transform(&self, t: Transform) -> Position {
         match t {
             Transform::Top => Position {
-                x: self.x,
                 y: self.y - 1,
+                ..*self
             },
             Transform::Bottom => Position {
-                x: self.x,
                 y: self.y + 1,
+                ..*self
             },
             Transform::Left => Position {
                 x: self.x - 1,
-                y: self.y,
+                ..*self
             },
             Transform::Right => Position {
                 x: self.x + 1,
-                y: self.y,
+                ..*self
             },
             Transform::TopLeft => Position {
                 x: self.x - 1,
